@@ -5,28 +5,32 @@
  */
 package pojos;
 
-import database.PasswordSecurity;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  *
  * @author Jakob
  */
 @Entity
-public class Customer {
+public class Customer implements Serializable {
 
     @Id
     private String email;
+    private String vorname;
+    private String nachname;
     @Column(name = "pw_hash")
     private String pwHash;
     @Column(name = "pw_salt")
     private byte[] pwSalt;
+
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     public Customer() {
 
@@ -66,5 +70,29 @@ public class Customer {
 
     public void setPwSalt(byte[] pwSalt) {
         this.pwSalt = pwSalt;
+    }
+
+    public String getVorname() {
+        return vorname;
+    }
+
+    public void setVorname(String vorname) {
+        this.vorname = vorname;
+    }
+
+    public String getNachname() {
+        return nachname;
+    }
+
+    public void setNachname(String nachname) {
+        this.nachname = nachname;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

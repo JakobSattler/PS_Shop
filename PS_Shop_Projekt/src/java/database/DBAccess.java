@@ -57,8 +57,12 @@ public class DBAccess {
         em.close();
     }
     
-    public static void main(String[] args) throws NoSuchAlgorithmException {
-        byte[] salt = PasswordSecurity.createSalt();
-        System.out.println(PasswordSecurity.createMD5HasshWithSalt("hallo", salt));
+    public Customer findCustomerByEmail(String email) throws NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException{
+        utx.begin();
+        EntityManager em = emf.createEntityManager();
+        Customer c = (Customer) em.find(Customer.class, email);
+        utx.commit();
+        em.close();
+        return c;
     }
 }

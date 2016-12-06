@@ -6,13 +6,13 @@
 package servlet;
 
 import database.DBAccess;
+import database.PasswordSecurity;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.servlet.ServletConfig;
@@ -27,6 +27,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import pojos.Customer;
 
 /**
  *
@@ -56,9 +57,9 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-
+            out.println("hallo");
             /* TODO output your page here. You may use following sample code. */
-            request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
+//            request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
         }
     }
 
@@ -110,6 +111,10 @@ public class HomeServlet extends HttpServlet {
             dba.saveCustomer("b", "hallo");
             dba.saveCustomer("c", "asdf");
             dba.saveCustomer("d", "asdf");
+            
+            Customer c = dba.findCustomerByEmail("j.sattler97@gmail.com");
+            boolean b = PasswordSecurity.createMD5HasshWithSalt("hallo", c.getPwSalt()).equals(c.getPwHash());
+            System.out.println(b);
         } catch (NotSupportedException ex) {
             Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SystemException ex) {
