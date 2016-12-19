@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -58,6 +59,8 @@ public class HomeServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             out.println("hallo");
+              RequestDispatcher req = request.getRequestDispatcher("/jsp/home.jsp");
+              req.forward(request, response);
             /* TODO output your page here. You may use following sample code. */
 //            request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
         }
@@ -115,6 +118,8 @@ public class HomeServlet extends HttpServlet {
             Customer c = dba.findCustomerByEmail("j.sattler97@gmail.com");
             boolean b = PasswordSecurity.createMD5HasshWithSalt("hallo", c.getPwSalt()).equals(c.getPwHash());
             System.out.println(b);
+            
+          
         } catch (NotSupportedException ex) {
             Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SystemException ex) {
