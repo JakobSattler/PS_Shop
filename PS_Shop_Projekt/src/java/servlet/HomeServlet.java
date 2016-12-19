@@ -57,7 +57,7 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            out.println("hallo");
+            request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
             /* TODO output your page here. You may use following sample code. */
 //            request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
         }
@@ -106,26 +106,9 @@ public class HomeServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         try {
             dba = DBAccess.getInstance(emf, utx);
-            dba.saveCustomer("j.sattler97@gmail.com", "hallo");
-            dba.saveCustomer("a", "hallo");
-            dba.saveCustomer("b", "hallo");
-            dba.saveCustomer("c", "asdf");
-            dba.saveCustomer("d", "asdf");
-            
-            Customer c = dba.findCustomerByEmail("j.sattler97@gmail.com");
-            boolean b = PasswordSecurity.createMD5HasshWithSalt("hallo", c.getPwSalt()).equals(c.getPwHash());
-            System.out.println(b);
         } catch (NotSupportedException ex) {
             Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SystemException ex) {
-            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RollbackException ex) {
-            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (HeuristicMixedException ex) {
-            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (HeuristicRollbackException ex) {
             Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

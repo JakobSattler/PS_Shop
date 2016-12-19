@@ -14,6 +14,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import pojos.Address;
 import pojos.Customer;
 
 /**
@@ -45,10 +46,8 @@ public class DBAccess {
      * @param email
      * @param password password in plain text
      */
-    public void saveCustomer(String email, String password) throws NoSuchAlgorithmException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException {
-        byte[] salt = PasswordSecurity.createSalt();
-        String pwHash = PasswordSecurity.createMD5HasshWithSalt(password, salt);
-        Customer c = new Customer(email, pwHash, salt);
+    public void saveCustomer(String email, String password, String firstName, String lastName, Address address) throws NoSuchAlgorithmException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException {
+        Customer c = new Customer(email, password, firstName, lastName, address);
 
         utx.begin();
         EntityManager em = emf.createEntityManager();

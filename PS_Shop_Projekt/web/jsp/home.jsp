@@ -17,6 +17,7 @@
             Email: <input type="text" name="mail"/><br>
             Passwort: <input type="text" name="password"/><br>
             <input type="submit" value="Login"/>
+            <input type="button" value="Registrieren"  onClick="window.location.href='RegisterPageServlet'">
         </form>
     </body>
 </html>
