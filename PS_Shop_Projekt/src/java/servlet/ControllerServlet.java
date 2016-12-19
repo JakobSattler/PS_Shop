@@ -42,12 +42,10 @@ public class ControllerServlet extends HttpServlet {
             System.out.println("basdfkalsödfjlkjadshfkhaskl");
             RequestDispatcher req;
             System.out.println(request.getQueryString());
-//            if (request.getAttribute("menu").equals("news"))
-//            {
-                req = request.getRequestDispatcher("/jsp/news.jsp");
-                req.forward(request, response);
-                System.out.println("news servlet");
-//            }
+
+            req = request.getRequestDispatcher("/jsp/" + request.getParameter("menu") + ".jsp");
+            req.forward(request, response);
+
 
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");

@@ -8,3 +8,19 @@ and open the template in the editor.
     Author     : dinop
 */
 
+#showframeMap {
+    position: fixed;
+    width: 98%;
+    height: 30%;
+    float:start;
+}
+#contact {
+
+    float: left;
+    padding: 10%;
+}
+#time {
+
+    float: right;
+    padding: 10%;
+}
