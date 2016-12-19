@@ -1,0 +1,36 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19.12.2016, 14:43:07
+    Author     : dinop
+*/
+
+#showframeMap {
+    position: fixed;
+    float:start;
+}
+#contact {
+
+    float: left;
+    padding: 10%;
+}
+#time {
+
+    float: right;
+    padding: 10%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2; color: black}

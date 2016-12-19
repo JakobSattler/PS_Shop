@@ -5,7 +5,9 @@
  */
 package pojos;
 
+import database.PasswordSecurity;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,8 +23,8 @@ public class Customer implements Serializable {
 
     @Id
     private String email;
-    private String vorname;
-    private String nachname;
+    private String firstName;
+    private String lastName;
     @Column(name = "pw_hash")
     private String pwHash;
     @Column(name = "pw_salt")
@@ -39,13 +41,20 @@ public class Customer implements Serializable {
     /**
      *
      * @param email email which identifies the user
-     * @param pwHash hash built of password and salt
-     * @param pwSalt random salt array
+     * @param password password in plain text
+     * @param firstName
+     * @param lastName
+     * @param address
+     * @throws java.security.NoSuchAlgorithmException
      */
-    public Customer(String email, String pwHash, byte[] pwSalt) {
+    public Customer(String email, String password, String firstName, String lastName, Address address) throws NoSuchAlgorithmException {
         this.email = email;
-        this.pwHash = pwHash;
-        this.pwSalt = pwSalt;
+        byte[] salt = PasswordSecurity.createSalt();
+        this.pwSalt = salt;
+        this.pwHash = PasswordSecurity.createMD5HasshWithSalt(password, salt);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
     }
 
     public String getEmail() {
@@ -73,19 +82,19 @@ public class Customer implements Serializable {
     }
 
     public String getVorname() {
-        return vorname;
+        return firstName;
     }
 
     public void setVorname(String vorname) {
-        this.vorname = vorname;
+        this.firstName = vorname;
     }
 
     public String getNachname() {
-        return nachname;
+        return lastName;
     }
 
     public void setNachname(String nachname) {
-        this.nachname = nachname;
+        this.lastName = nachname;
     }
 
     public Address getAddress() {

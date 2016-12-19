@@ -15,6 +15,7 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import pojos.Address;
+import pojos.Article;
 import pojos.Customer;
 
 /**
@@ -25,8 +26,10 @@ public class DBAccess {
 
     private static DBAccess theInstance = null;
 
-    public static DBAccess getInstance(EntityManagerFactory emf, UserTransaction utx) throws NotSupportedException, SystemException {
-        if (theInstance == null) {
+    public static DBAccess getInstance(EntityManagerFactory emf, UserTransaction utx) throws NotSupportedException, SystemException
+    {
+        if (theInstance == null)
+        {
             theInstance = new DBAccess(emf, utx);
         }
         return theInstance;
@@ -35,7 +38,8 @@ public class DBAccess {
     private EntityManagerFactory emf;
     private UserTransaction utx;
 
-    private DBAccess(EntityManagerFactory emf, UserTransaction utx) throws NotSupportedException, SystemException {
+    private DBAccess(EntityManagerFactory emf, UserTransaction utx) throws NotSupportedException, SystemException
+    {
         this.emf = emf;
         this.utx = utx;
         assert this.emf != null;
@@ -55,13 +59,25 @@ public class DBAccess {
         utx.commit();
         em.close();
     }
-    
-    public Customer findCustomerByEmail(String email) throws NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException{
+
+    public Customer findCustomerByEmail(String email) throws NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException
+    {
         utx.begin();
         EntityManager em = emf.createEntityManager();
         Customer c = (Customer) em.find(Customer.class, email);
         utx.commit();
         em.close();
         return c;
+    }
+
+    public boolean insertArticle(Article article) throws NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException
+    {
+        utx.begin();
+        EntityManager em = emf.createEntityManager();
+        em.persist(article);
+
+        utx.commit();
+        em.close();
+        return true;
     }
 }
