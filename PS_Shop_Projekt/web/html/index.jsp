@@ -4,6 +4,7 @@
     Author     : dinop
 --%>
 
+<%@page import="pojos.Customer"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!doctype html>
 <html lang=''>
@@ -22,9 +23,16 @@
     <body>
         <%!
             private boolean loggedIn;
+            private Customer c;
         %>
         <%
-            loggedIn = session.getAttribute("customer") != null;
+            c = (Customer) session.getAttribute("customer");
+            loggedIn = c != null;
+//            System.out.println(c);
+//            System.out.println(session.getAttribute("loggedIn"));
+//            if (session.getAttribute("loggedIn").equals("true")) {
+//                loggedIn = true;
+//            }
         %>
         <h1>Herzlich willkommen beim P&S Online-Shop</h1>
         <div id="cssmenu">
@@ -37,8 +45,10 @@
                 <li><a href="ControllerServlet?menu=contact"><i class="fa fa-fw fa-phone"></i> Kontakt</a></li>
                     <% if (!loggedIn) { %>
                 <li><a href="ControllerServlet?menu=login"><i class="fa fa-fw fa-lock"></i> Login</a></li>
-                    <% } else { %>
-                <li><a href="ControllerServlet?menu=login"><i class="fa fa-fw fa-lock"></i> Logout</a></li>
+                <li><a href="ControllerServlet?menu=register"><i class="fa fa-fw"></i>Registrieren</a></li>
+                    <% } else {%>
+                <li><a href="#"><i class="fa fa-fw"></i>Eingeloggt als <%=c.getVorname() + " " + c.getNachname()%></a></li>
+                <li><a href="ControllerServlet?menu=logout"><i class="fa fa-fw fa-lock"></i> Logout</a></li>
                     <% }%>
             </ul>
         </div>

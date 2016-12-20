@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,10 +19,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author dinop
  */
-@WebServlet(name = "ControllerServlet", urlPatterns =
-{
-    "/ControllerServlet"
-})
+@WebServlet(name = "ControllerServlet", urlPatterns
+        = {
+            "/ControllerServlet"
+        })
 public class ControllerServlet extends HttpServlet {
 
     /**
@@ -34,29 +35,32 @@ public class ControllerServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter())
-        {
-            System.out.println("basdfkalsödfjlkjadshfkhaskl");
-            RequestDispatcher req;
-            System.out.println(request.getQueryString());
+        String menuParam = request.getParameter("menu");
+        if (menuParam.equals("logout")) {
+            handleLogout(request, response);
+        } else {
+            try (PrintWriter out = response.getWriter()) {
+                System.out.println("basdfkalsödfjlkjadshfkhaskl");
+                RequestDispatcher req;
+                System.out.println(request.getQueryString());
 
-            req = request.getRequestDispatcher("/jsp/" + request.getParameter("menu") + ".jsp");
-            req.forward(request, response);
+                req = request.getRequestDispatcher("/jsp/" + menuParam + ".jsp");
+                req.forward(request, response);
 
 
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ControllerServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ControllerServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+                /* TODO output your page here. You may use following sample code. */
+                out.println("<!DOCTYPE html>");
+                out.println("<html>");
+                out.println("<head>");
+                out.println("<title>Servlet ControllerServlet</title>");
+                out.println("</head>");
+                out.println("<body>");
+                out.println("<h1>Servlet ControllerServlet at " + request.getContextPath() + "</h1>");
+                out.println("</body>");
+                out.println("</html>");
+            }
         }
     }
 
@@ -71,8 +75,7 @@ public class ControllerServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -86,8 +89,7 @@ public class ControllerServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -97,9 +99,21 @@ public class ControllerServlet extends HttpServlet {
      * @return a String containing servlet description
      */
     @Override
-    public String getServletInfo()
-    {
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("sessionID")) {
+                cookie.setMaxAge(0);
+                response.addCookie(cookie);
+            }
+        }
+        request.getSession().setAttribute("customer", null);
+        request.getSession().setAttribute("sessionID", null);
+        response.sendRedirect("HomeServlet");
+    }
 
 }

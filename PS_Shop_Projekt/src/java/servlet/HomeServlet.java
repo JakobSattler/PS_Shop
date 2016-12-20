@@ -46,6 +46,47 @@ public class HomeServlet extends HttpServlet {
     @Resource
     private UserTransaction utx;
 
+    private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException, NoSuchAlgorithmException, ServletException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        boolean loginCorrect;
+
+        if (dba.isLoginCorrect(email, password)) {
+            Customer customer = dba.findCustomerByEmail(email);
+            String sessionID = customer.getPwHash();
+            request.getSession().setAttribute("customer", customer);
+//                                request.getSession().setAttribute("pemrissions", dba.getPermissionsByUser(user));
+            request.getSession().setAttribute("sessionID", sessionID);
+            System.out.println("output - correct login");
+            Cookie cookie = new Cookie("sessionID", customer.getPwHash());
+            cookie.setMaxAge(Integer.MAX_VALUE);
+            response.addCookie(cookie);
+            response.sendRedirect("HomeServlet");
+        } else {
+            request.setAttribute("loginError", "Benutzer nicht vorhanden oder Passwort nicht korrekt!");
+            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+        }
+    }
+
+    public boolean isUserLoggedIn(HttpServletRequest request) {
+        boolean loggedIn = false;
+        Cookie[] cookies = request.getCookies();
+        Cookie sessionIDCookie = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("sessionID")) {
+                    sessionIDCookie = cookie;
+                }
+            }
+        }
+        String sessionID = (String) request.getSession().getAttribute("sessionID");
+        if (sessionIDCookie != null && sessionID != null) {
+            loggedIn = sessionIDCookie.getValue().equals(sessionID);
+        }
+        return loggedIn;
+    }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -59,7 +100,11 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            out.println("hallo");
+            if (isUserLoggedIn(request)) {
+                request.getSession().setAttribute("loggedIn", "true");
+            } else {
+                request.getSession().setAttribute("loggedIn", "false");
+            }
             RequestDispatcher req = request.getRequestDispatcher("/jsp/home.jsp");
             req.forward(request, response);
             /* TODO output your page here. You may use following sample code. */
@@ -118,28 +163,6 @@ public class HomeServlet extends HttpServlet {
         }
     }
 
-    private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException, NoSuchAlgorithmException, ServletException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-
-        boolean loginCorrect;
-
-        if (dba.isLoginCorrect(email, password)) {
-            Customer customer = dba.findCustomerByEmail(email);
-            String sessionID = customer.getPwHash();
-            request.getSession().setAttribute("customer", customer);
-//                                request.getSession().setAttribute("pemrissions", dba.getPermissionsByUser(user));
-            request.getSession().setAttribute("sessionID", sessionID);
-            System.out.println("output - correct login");
-            Cookie cookie = new Cookie("sessionID", customer.getPwHash());
-            response.addCookie(cookie);
-            response.sendRedirect("HomeServlet");
-        } else {
-            request.setAttribute("loginError", "Benutzer nicht vorhanden oder Passwort nicht korrekt!");
-            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
-        }
-    }
-
     /**
      * Returns a short description of the servlet.
      *
@@ -155,6 +178,7 @@ public class HomeServlet extends HttpServlet {
         try {
             dba = DBAccess.getInstance(emf, utx);
 
+            dba.saveCustomer("test3", "test3", "Jakob", "Sattler", null);
             dba.saveCustomer("test1", "test1", null, null, null);
             dba.saveCustomer("test2", "test2", null, null, null);
         } catch (NotSupportedException ex) {
