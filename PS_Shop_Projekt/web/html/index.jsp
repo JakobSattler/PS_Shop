@@ -16,9 +16,10 @@
         <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
         <script src="https://s3.amazonaws.com/menumaker/menumaker.min.js" type="text/javascript"></script>
         <script src="js/script.js"></script>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >-->
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="css/homestyle.css">
+        
     </head>
     <body>
         <%!
@@ -34,7 +35,6 @@
 //                loggedIn = true;
 //            }
         %>
-        <h1>Herzlich willkommen beim P&S Online-Shop</h1>
         <div id="cssmenu">
             <ul>
                 <li><a href="#" target="_blank"><i class="fa fa-fw fa-home"></i> Home</a></li>
@@ -52,5 +52,5 @@
                     <% }%>
             </ul>
         </div>
-    </body>
+
 

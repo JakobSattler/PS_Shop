@@ -6,14 +6,18 @@
 package pojos;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author Jakob
  */
+@Entity
+@NamedQuery(name = "Article.getAllArticle", query = "Select a FROM Article a")
 public class Article {
 
     @Column(name = "article_id")

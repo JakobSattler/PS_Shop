@@ -44,7 +44,7 @@
                     %>
                     <tr>
                         <td>
-                            <input style="width: 100%" type="button" value="Registrieren"  onClick="window.location.href = 'RegisterPageServlet'"/>
+                            <input style="width: 100%" type="submit" value="Login" />
                         </td>
                     </tr>
                 </table>

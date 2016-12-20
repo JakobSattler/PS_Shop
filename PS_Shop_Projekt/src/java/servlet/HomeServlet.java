@@ -10,6 +10,8 @@ import database.PasswordSecurity;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -29,6 +31,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import pojos.Article;
 import pojos.Customer;
 
 /**
@@ -100,10 +103,15 @@ public class HomeServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            if (isUserLoggedIn(request)) {
-                request.getSession().setAttribute("loggedIn", "true");
-            } else {
-                request.getSession().setAttribute("loggedIn", "false");
+            out.println("hallo");
+            try {
+                dba = DBAccess.getInstance(emf, utx);
+                List<Article> liste = dba.getAllArticles();
+                request.setAttribute("ArticleListe", liste);
+            } catch (NotSupportedException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SystemException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
             RequestDispatcher req = request.getRequestDispatcher("/jsp/home.jsp");
             req.forward(request, response);
@@ -181,6 +189,10 @@ public class HomeServlet extends HttpServlet {
             dba.saveCustomer("test3", "test3", "Jakob", "Sattler", null);
             dba.saveCustomer("test1", "test1", null, null, null);
             dba.saveCustomer("test2", "test2", null, null, null);
+            dba.insertArticle(new Article("Hose", "tolle Hose", 'M'));
+            dba.insertArticle(new Article("Shirt", "tolle Shirt", 'W'));
+            dba.insertArticle(new Article("Pulli", "tolle Pulli", 'M'));
+
         } catch (NotSupportedException ex) {
             Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SystemException ex) {

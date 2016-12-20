@@ -5,7 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
 <%@ include file="../html/index.jsp" %> 
 <title>Marken</title>
         <h1>Hello World!</h1>
