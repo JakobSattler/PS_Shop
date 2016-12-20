@@ -20,19 +20,27 @@
         <link rel="stylesheet" href="css/homestyle.css">
     </head>
     <body>
-
-
-
+        <%!
+            private boolean loggedIn;
+        %>
+        <%
+            loggedIn = session.getAttribute("customer") != null;
+        %>
+        <h1>Herzlich willkommen beim P&S Online-Shop</h1>
         <div id="cssmenu">
-                <ul>
-                    <li><a href="#" target="_blank"><i class="fa fa-fw fa-home"></i> Home</a></li>
-                    <li><a href="ControllerServlet?menu=news"><i class="fa fa-fw fa-info"></i> News</a></li>
-                    <li><a href="ControllerServlet?menu=brands"><i class="fa fa-fw fa-copyright"></i> Marken</a></li>
-                    <li><a href="ControllerServlet?menu=onlineshop"><i class="fa fa-fw fa-globe"></i> Online-Shop</a></li>
-                    <li><a href="ControllerServlet?menu=shoppingcart"><i class="fa fa-fw fa-shopping-cart"></i> Warenkorb</a></li>
-                    <li><a href="ControllerServlet?menu=contact"><i class="fa fa-fw fa-phone"></i> Kontakt</a></li>
-                    <li><a href="ControllerServlet?menu=login"><i class="fa fa-fw fa-lock"></i> Login</a></li>
-                </ul>
+            <ul>
+                <li><a href="#" target="_blank"><i class="fa fa-fw fa-home"></i> Home</a></li>
+                <li><a href="ControllerServlet?menu=news"><i class="fa fa-fw fa-info"></i> News</a></li>
+                <li><a href="ControllerServlet?menu=brands"><i class="fa fa-fw fa-copyright"></i> Marken</a></li>
+                <li><a href="ControllerServlet?menu=onlineshop"><i class="fa fa-fw fa-globe"></i> Online-Shop</a></li>
+                <li><a href="ControllerServlet?menu=shoppingcart"><i class="fa fa-fw fa-shopping-cart"></i> Warenkorb</a></li>
+                <li><a href="ControllerServlet?menu=contact"><i class="fa fa-fw fa-phone"></i> Kontakt</a></li>
+                    <% if (!loggedIn) { %>
+                <li><a href="ControllerServlet?menu=login"><i class="fa fa-fw fa-lock"></i> Login</a></li>
+                    <% } else { %>
+                <li><a href="ControllerServlet?menu=login"><i class="fa fa-fw fa-lock"></i> Logout</a></li>
+                    <% }%>
+            </ul>
         </div>
-
+    </body>
 

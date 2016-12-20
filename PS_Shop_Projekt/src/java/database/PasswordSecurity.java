@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
+import pojos.Customer;
 
 /**
  *
@@ -33,5 +34,9 @@ public class PasswordSecurity {
         byte[] salt = new byte[32];
         r.nextBytes(salt);
         return salt;
+    }
+    
+    public static boolean isPasswordCorrect(String password, Customer customer) throws NoSuchAlgorithmException{
+        return customer.getPwHash().equals(createMD5HasshWithSalt(password, customer.getPwSalt()));
     }
 }

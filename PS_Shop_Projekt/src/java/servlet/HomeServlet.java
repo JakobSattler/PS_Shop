@@ -19,6 +19,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,8 +60,8 @@ public class HomeServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             out.println("hallo");
-              RequestDispatcher req = request.getRequestDispatcher("/jsp/home.jsp");
-              req.forward(request, response);
+            RequestDispatcher req = request.getRequestDispatcher("/jsp/home.jsp");
+            req.forward(request, response);
             /* TODO output your page here. You may use following sample code. */
 //            request.getRequestDispatcher("/jsp/home.jsp").forward(request, response);
         }
@@ -92,7 +93,51 @@ public class HomeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        if (request.getParameter("login").equals("login")) {
+            try {
+                handleLogin(request, response);
+            } catch (NotSupportedException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SystemException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RollbackException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (HeuristicRollbackException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SecurityException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalStateException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (HeuristicMixedException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            processRequest(request, response);
+        }
+    }
+
+    private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException, NoSuchAlgorithmException, ServletException {
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
+        boolean loginCorrect;
+
+        if (dba.isLoginCorrect(email, password)) {
+            Customer customer = dba.findCustomerByEmail(email);
+            String sessionID = customer.getPwHash();
+            request.getSession().setAttribute("customer", customer);
+//                                request.getSession().setAttribute("pemrissions", dba.getPermissionsByUser(user));
+            request.getSession().setAttribute("sessionID", sessionID);
+            System.out.println("output - correct login");
+            Cookie cookie = new Cookie("sessionID", customer.getPwHash());
+            response.addCookie(cookie);
+            response.sendRedirect("HomeServlet");
+        } else {
+            request.setAttribute("loginError", "Benutzer nicht vorhanden oder Passwort nicht korrekt!");
+            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -110,9 +155,19 @@ public class HomeServlet extends HttpServlet {
         try {
             dba = DBAccess.getInstance(emf, utx);
 
+            dba.saveCustomer("test1", "test1", null, null, null);
+            dba.saveCustomer("test2", "test2", null, null, null);
         } catch (NotSupportedException ex) {
             Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SystemException ex) {
+            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RollbackException ex) {
+            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (HeuristicMixedException ex) {
+            Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (HeuristicRollbackException ex) {
             Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

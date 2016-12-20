@@ -18,10 +18,10 @@
 </div>
 <div id="time">
     <table>
-        <tr>
+        <tr class="contactTable">
             <th>Öffnugszeiten</th>
         </tr>
-        <tr>
+        <tr class="contactTable">
             <td>Montag</td>
             <td>08.00 - 17.00 Uhr</td>
         </tr>
