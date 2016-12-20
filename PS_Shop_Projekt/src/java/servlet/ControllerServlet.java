@@ -42,7 +42,7 @@ public class ControllerServlet extends HttpServlet {
             System.out.println("basdfkalsödfjlkjadshfkhaskl");
             RequestDispatcher req;
             System.out.println(request.getQueryString());
-
+            
             req = request.getRequestDispatcher("/jsp/" + request.getParameter("menu") + ".jsp");
             req.forward(request, response);
 

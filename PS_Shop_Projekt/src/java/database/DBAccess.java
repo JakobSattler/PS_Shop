@@ -6,8 +6,10 @@
 package database;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -85,5 +87,12 @@ public class DBAccess {
         utx.commit();
         em.close();
         return true;
+    }
+    
+    public List<Article> getAllArticles()
+    {
+        EntityManager em = emf.createEntityManager();
+       TypedQuery<Article> tq = em.createNamedQuery("Article.getAllArticle",Article.class); 
+       return tq.getResultList(); 
     }
 }
