@@ -355,3 +355,10 @@ error {
     color: red;
 }
 
+input {
+    color:black;
+}
+select{
+    color:black;
+}
+

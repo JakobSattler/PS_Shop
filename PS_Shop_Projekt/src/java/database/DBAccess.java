@@ -14,6 +14,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -112,6 +114,26 @@ public class DBAccess {
     public List<Article> getArticleByName(String filter)
     {
         EntityManager em = emf.createEntityManager();
-        return em.createQuery("SELECT a FROM Article a WHERE a.name LIKE ?1").setParameter(1, filter).getResultList();
+//        return em.createQuery("SELECT a FROM Article a WHERE a.name LIKE ('%?1%')").setParameter(1, filter).getResultList();
+        return em.createQuery("SELECT a FROM Article a WHERE a.name LIKE ('%" + filter + "%')").getResultList();
+    }
+
+    public List<Article> getArticleByFilter(String name, String brand, String gender)
+    {
+        
+        if (gender.toUpperCase().equals("A"))
+        {
+            gender = "";
+        }
+
+        if (brand.toUpperCase().equals("A"))
+        {
+            brand = "";
+        }
+        
+        System.out.println(brand);
+        System.out.println(gender);
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery("SELECT a FROM Article a WHERE a.name LIKE ('%" + name + "%') AND a.brand LIKE ('%" + brand + "%') AND a.sex LIKE('%" + gender + "%')").getResultList();
     }
 }
