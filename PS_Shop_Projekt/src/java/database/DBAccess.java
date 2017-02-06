@@ -6,6 +6,10 @@
 package database;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -28,8 +32,10 @@ public class DBAccess {
 
     private static DBAccess theInstance = null;
 
-    public static DBAccess getInstance(EntityManagerFactory emf, UserTransaction utx) throws NotSupportedException, SystemException {
-        if (theInstance == null) {
+    public static DBAccess getInstance(EntityManagerFactory emf, UserTransaction utx) throws NotSupportedException, SystemException
+    {
+        if (theInstance == null)
+        {
             theInstance = new DBAccess(emf, utx);
         }
         return theInstance;
@@ -38,7 +44,8 @@ public class DBAccess {
     private EntityManagerFactory emf;
     private UserTransaction utx;
 
-    private DBAccess(EntityManagerFactory emf, UserTransaction utx) throws NotSupportedException, SystemException {
+    private DBAccess(EntityManagerFactory emf, UserTransaction utx) throws NotSupportedException, SystemException
+    {
         this.emf = emf;
         this.utx = utx;
         assert this.emf != null;
@@ -49,7 +56,8 @@ public class DBAccess {
      * @param email
      * @param password password in plain text
      */
-    public void saveCustomer(String email, String password, String firstName, String lastName, Address address) throws NoSuchAlgorithmException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException {
+    public void saveCustomer(String email, String password, String firstName, String lastName, Address address) throws NoSuchAlgorithmException, NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException
+    {
         Customer c = new Customer(email, password, firstName, lastName, address);
 
         utx.begin();
@@ -59,7 +67,8 @@ public class DBAccess {
         em.close();
     }
 
-    public Customer findCustomerByEmail(String email) throws NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException {
+    public Customer findCustomerByEmail(String email) throws NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException
+    {
         utx.begin();
         EntityManager em = emf.createEntityManager();
         Customer c = (Customer) em.find(Customer.class, email);
@@ -68,18 +77,22 @@ public class DBAccess {
         return c;
     }
 
-    public boolean userExists(String email) throws NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException {
+    public boolean userExists(String email) throws NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException
+    {
         return findCustomerByEmail(email) != null;
     }
 
-    public boolean isLoginCorrect(String email, String password) throws NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException, NoSuchAlgorithmException {
-        if (findCustomerByEmail(email) == null) {
+    public boolean isLoginCorrect(String email, String password) throws NotSupportedException, SystemException, RollbackException, HeuristicRollbackException, SecurityException, IllegalStateException, HeuristicMixedException, NoSuchAlgorithmException
+    {
+        if (findCustomerByEmail(email) == null)
+        {
             return false;
         }
         return PasswordSecurity.isPasswordCorrect(password, findCustomerByEmail(email));
     }
 
-    public boolean insertArticle(Article article) throws NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException {
+    public boolean insertArticle(Article article) throws NotSupportedException, SystemException, RollbackException, HeuristicMixedException, HeuristicRollbackException
+    {
         utx.begin();
         EntityManager em = emf.createEntityManager();
         em.persist(article);
@@ -88,11 +101,17 @@ public class DBAccess {
         em.close();
         return true;
     }
-    
+
     public List<Article> getAllArticles()
     {
         EntityManager em = emf.createEntityManager();
-       TypedQuery<Article> tq = em.createNamedQuery("Article.getAllArticle",Article.class); 
-       return tq.getResultList(); 
+        TypedQuery<Article> tq = em.createNamedQuery("Article.getAllArticle", Article.class);
+        return tq.getResultList();
+    }
+
+    public List<Article> getArticleByName(String filter)
+    {
+        EntityManager em = emf.createEntityManager();
+        return em.createQuery("SELECT a FROM Article a WHERE a.name LIKE ?1").setParameter(1, filter).getResultList();
     }
 }

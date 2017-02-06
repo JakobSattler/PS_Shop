@@ -28,15 +28,53 @@ public class Article {
     private String description;
     @Column(length = 1)
     private char sex;
+    private String brand;
+    private String pic;
 
     public Article() {
     }
 
-    public Article(String name, String description, char sex) {
+    public Article(int articleID, String name, String description, char sex, String brand, String pic)
+    {
+        this.articleID = articleID;
         this.name = name;
         this.description = description;
         this.sex = sex;
+        this.brand = brand;
+        this.pic = pic;
     }
+   public Article(String name, String description, char sex, String brand, String pic)
+    {
+        this.name = name;
+        this.description = description;
+        this.sex = sex;
+        this.brand = brand;
+        this.pic = pic;
+    }
+    public String getBrand()
+    {
+        return brand;
+        
+       
+    }
+
+    public void setBrand(String brand)
+    {
+        this.brand = brand;
+    }
+
+    public String getPic()
+    {
+        return pic;
+    }
+
+    public void setPic(String pic)
+    {
+        this.pic = pic;
+    }
+
+
+    
 
     public int getArticleID() {
         return articleID;

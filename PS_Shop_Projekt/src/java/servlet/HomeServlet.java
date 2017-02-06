@@ -189,9 +189,9 @@ public class HomeServlet extends HttpServlet {
             dba.saveCustomer("test3", "test3", "Jakob", "Sattler", null);
             dba.saveCustomer("test1", "test1", null, null, null);
             dba.saveCustomer("test2", "test2", null, null, null);
-            dba.insertArticle(new Article("Hose", "tolle Hose", 'M'));
-            dba.insertArticle(new Article("Shirt", "tolle Shirt", 'W'));
-            dba.insertArticle(new Article("Pulli", "tolle Pulli", 'M'));
+            dba.insertArticle(new Article("Hose", "tolle Hose", 'M',"Hugo Boss","pic1"));
+            dba.insertArticle(new Article("Shirt", "tolle Shirt", 'W',"Nike","pic1"));
+            dba.insertArticle(new Article("Pulli", "tolle Pulli", 'M',"Hugo Boss","pic1"));
 
         } catch (NotSupportedException ex) {
             Logger.getLogger(HomeServlet.class.getName()).log(Level.SEVERE, null, ex);

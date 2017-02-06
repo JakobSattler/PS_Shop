@@ -5,8 +5,15 @@
  */
 package servlet;
 
+import database.DBAccess;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Resource;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,16 +21,28 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.NotSupportedException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
+import pojos.Article;
 
 /**
  *
  * @author dinop
  */
 @WebServlet(name = "ControllerServlet", urlPatterns
-        = {
+        =
+        {
             "/ControllerServlet"
         })
+
 public class ControllerServlet extends HttpServlet {
+
+    @PersistenceUnit
+    private EntityManagerFactory emf;
+
+    @Resource
+    private UserTransaction utx;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,32 +54,29 @@ public class ControllerServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException
+    {
         response.setContentType("text/html;charset=UTF-8");
         String menuParam = request.getParameter("menu");
-        if (menuParam.equals("logout")) {
+        if (menuParam.equals("logout"))
+        {
             handleLogout(request, response);
-        } else {
-            try (PrintWriter out = response.getWriter()) {
-                System.out.println("basdfkalsödfjlkjadshfkhaskl");
-                RequestDispatcher req;
-                System.out.println(request.getQueryString());
+        } else
+        {
 
-                req = request.getRequestDispatcher("/jsp/" + menuParam + ".jsp");
-                req.forward(request, response);
+            System.out.println("basdfkalsödfjlkjadshfkhaskl");
+            RequestDispatcher req;
+            System.out.println(request.getQueryString());
 
+//                if (menuParam.equals("onlineshop"))
+//                {
+//                    DBAccess dba = DBAccess.getInstance(emf, utx);
+//                    List<Article> liste = dba.getAllArticles();
+//                    request.setAttribute("ArticleListe", liste);
+//                }
+            req = request.getRequestDispatcher("/jsp/" + menuParam + ".jsp");
+            req.forward(request, response);
 
-                /* TODO output your page here. You may use following sample code. */
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Servlet ControllerServlet</title>");
-                out.println("</head>");
-                out.println("<body>");
-                out.println("<h1>Servlet ControllerServlet at " + request.getContextPath() + "</h1>");
-                out.println("</body>");
-                out.println("</html>");
-            }
         }
     }
 
@@ -75,7 +91,8 @@ public class ControllerServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException
+    {
         processRequest(request, response);
     }
 
@@ -89,7 +106,8 @@ public class ControllerServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException
+    {
         processRequest(request, response);
     }
 
@@ -99,14 +117,18 @@ public class ControllerServlet extends HttpServlet {
      * @return a String containing servlet description
      */
     @Override
-    public String getServletInfo() {
+    public String getServletInfo()
+    {
         return "Short description";
     }// </editor-fold>
 
-    private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void handleLogout(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("sessionID")) {
+        for (Cookie cookie : cookies)
+        {
+            if (cookie.getName().equals("sessionID"))
+            {
                 cookie.setMaxAge(0);
                 response.addCookie(cookie);
             }
